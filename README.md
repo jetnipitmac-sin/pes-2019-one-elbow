@@ -1,5 +1,7 @@
 # One Elbow · PES 2019 — Signature Dashboard
 
+**เปิดดูออนไลน์:** https://jetnipitmac-sin.github.io/pes-2019-one-elbow/
+
 เว็บเล่าเรื่องเคสไฟไหม้หน่วย HF alkylation โรงกลั่น PES ฟิลาเดลเฟีย (21 มิ.ย. 2019) แบบ scroll-driven
 มีโมเดล 3 มิติของข้องอที่แตกเป็นตัวเดินเรื่อง เลื่อนลงแล้วผนังท่อบางลงทีละปีจาก 1973 ถึง 2019 จนแตก
 ตัวเลขทุกตัวมาจากไฟล์ชุดเดียวกับรายงานใน `01_Report` (CSB, รายงานเมืองฟิลาเดลเฟีย, EIA และ `calc.py`)
@@ -18,7 +20,9 @@ npm install        # ครั้งแรกครั้งเดียว
 npm run dev        # เปิด http://localhost:5250
 ```
 
-ทำไฟล์สำหรับเผยแพร่ (`dist/` ใช้ path แบบ relative วางบนเว็บเซิร์ฟเวอร์ไหนก็ได้):
+ทุกครั้งที่ push ขึ้น `main` GitHub Actions (`.github/workflows/deploy.yml`) จะ build แล้วอัปเดตเว็บออนไลน์ให้เอง
+
+ทำไฟล์สำหรับเผยแพร่เอง (`dist/` ใช้ path แบบ relative วางบนเว็บเซิร์ฟเวอร์ไหนก็ได้):
 
 ```bash
 npm run build
