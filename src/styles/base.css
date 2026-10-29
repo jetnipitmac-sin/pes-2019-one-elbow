@@ -1,0 +1,192 @@
+/* ------------------------------------------------------------------ tokens
+   Two surfaces only: ink (night) and bone (paper). Sections ask for one with
+   data-theme; the page background and text colour cross-fade between them.
+   ember is the single loud colour and is kept for the elbow, the fire and the
+   one number a chart is about. */
+@property --bg { syntax: '<color>'; inherits: true; initial-value: #0b0a09; }
+@property --fg { syntax: '<color>'; inherits: true; initial-value: #ece6da; }
+@property --fg-2 { syntax: '<color>'; inherits: true; initial-value: #a49d91; }
+@property --line { syntax: '<color>'; inherits: true; initial-value: #2a2622; }
+
+:root {
+  --ink: #0b0a09;
+  --ink-2: #14120f;
+  --ink-3: #1d1a17;
+  --bone: #ece6da;
+  --bone-2: #dfd7c8;
+  --paper-ink: #17130f;
+  --ember: #ff5b1f;
+  --ember-soft: #ffb071;
+  --steel: #5d8ec9; /* validated vs ember on both surfaces (dataviz validator) */
+  --ember-mark: #f0541c; /* ember step for chart marks on ink */
+  --ok: #4fbf8f;
+  --partial: #e9b04a;
+  --water: #5aa9e6;
+
+  --bg: var(--ink);
+  --fg: var(--bone);
+  --fg-2: #a49d91;
+  --line: #2a2622;
+
+  --serif: 'Instrument Serif', 'Times New Roman', serif;
+  --sans: 'Inter Tight', 'Anuphan', system-ui, sans-serif;
+  --thai: 'Anuphan', 'Inter Tight', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --gutter: clamp(16px, 3.2vw, 48px);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
+
+}
+:root[data-theme='bone'] {
+  --ember-mark: #ff5b1f;
+  --bg: var(--bone);
+  --fg: var(--paper-ink);
+  --fg-2: #6b6357;
+  --line: #cbc2b2;
+}
+
+/* ------------------------------------------------------------------ base */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  /* only the page colour animates between themes; animating the inherited custom
+     properties made every element restyle on every frame of the cross-fade */
+  transition: background-color 0.9s var(--ease-io), color 0.9s var(--ease-io);
+  font-family: var(--thai);
+  font-size: 17px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+::selection { background: var(--ember); color: var(--ink); }
+img, svg, canvas { display: block; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+a { color: inherit; }
+h1, h2, h3, h4, p { margin: 0; font-weight: inherit; }
+
+.serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.01em; }
+.mono { font-family: var(--mono); font-feature-settings: 'zero' 0; }
+.it { font-style: italic; }
+.em { color: var(--ember); }
+.muted { color: var(--fg-2); }
+.tnum { font-variant-numeric: tabular-nums; }
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.kicker b { color: var(--fg); font-weight: 500; }
+
+.wrap { padding-inline: var(--gutter); }
+.hairline { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+/* section scaffolding ------------------------------------------------ */
+.sec { position: relative; padding: clamp(96px, 16vh, 180px) var(--gutter); }
+.sec-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px 48px;
+  align-items: end;
+  margin-bottom: clamp(48px, 9vh, 110px);
+}
+.sec-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--fg-2);
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+.sec-num::after { content: ''; width: 64px; height: 1px; background: currentColor; opacity: 0.6; }
+.sec-title {
+  font-family: var(--serif);
+  font-size: clamp(54px, 9.2vw, 168px);
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+}
+.sec-title .it { font-style: italic; }
+.sec-lede { font-size: clamp(17px, 1.35vw, 21px); line-height: 1.75; max-width: 34em; color: var(--fg); }
+.sec-lede + .sec-lede { margin-top: 1em; }
+
+/* split-text masks */
+.line-mask { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.char { display: inline-block; will-change: transform; }
+.reveal-up { opacity: 0; transform: translateY(28px); }
+
+/* source chip */
+.src {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  white-space: nowrap;
+  /* atomic inline: neighbouring chips can wrap onto the next line */
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  margin-right: 12px;
+}
+.src:hover { color: var(--ember); border-color: currentColor; }
+
+/* grain over everything (pointer-events none) */
+.grain {
+  position: fixed;
+  inset: -6%;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.9s steps(6) infinite;
+  will-change: transform;
+}
+/* dark speckle on paper: a static invert instead of a blend mode, so the compositor never blends a full-screen layer */
+:root[data-theme='bone'] .grain { opacity: 0.08; filter: invert(1); }
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-4%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* fixed WebGL stage ------------------------------------------------------ */
+.gl {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  transition: opacity 1s var(--ease-io), visibility 1s;
+}
+.gl.off { opacity: 0; visibility: hidden; }
+.gl canvas { width: 100% !important; height: 100% !important; }
+main { position: relative; z-index: 1; }
+
+/* anchors that follow points of the 3D model */
+.anchor { position: fixed; left: 0; top: 0; z-index: 2; pointer-events: none; will-change: transform; }
+
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  .sec-head { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grain { animation: none; }
+}
